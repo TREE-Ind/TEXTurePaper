@@ -5,6 +5,9 @@ import shlex
 import subprocess
 import sys
 from typing import Optional
+from werkzeug.utils import secure_filename
+import tempfile
+import os
 
 import trimesh
 
