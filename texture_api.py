@@ -20,8 +20,8 @@ def load_config(shape_path: str, text: str, seed: int, guidance_scale: float) ->
     text += ', {} view'
     log = LogConfig(exp_name=gen_exp_name())
     guide = GuideConfig(text=text)
-    guide.background_img = 'TEXTurePaper/textures/brick_wall.png'
-    guide.shape_path = 'TEXTurePaper/shapes/spot_triangulated.obj'
+    guide.background_img = 'textures/brick_wall.png'
+    guide.shape_path = 'shapes/spot_triangulated.obj'
     config = TrainConfig(log=log, guide=guide)
     config.guide.shape_path = shape_path
     config.optim.seed = seed
