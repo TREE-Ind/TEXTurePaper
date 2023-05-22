@@ -59,9 +59,37 @@ def run():
     config = load_config(shape_path, text, seed, guidance_scale)
     trainer = TEXTure(config)
 
-    # ... (continue the rest of the run method here)
 
-    # Finally, instead of yielding the results, return them
+    trainer.mesh_model.train()
+
+    total_steps = len(trainer.dataloaders['train'])
+    for step, data in enumerate(trainer.dataloaders['train'], start=1):
+        trainer.paint_step += 1
+        trainer.paint_viewpoint(data)
+        trainer.evaluate(trainer.dataloaders['val'],
+                            trainer.eval_renders_path)
+        trainer.mesh_model.train()
+
+        sample_image_dir = config.log.exp_dir / 'vis' / 'eval'
+        sample_image_paths = sorted(
+            sample_image_dir.glob(f'step_{trainer.paint_step:05d}_*.jpg'))
+        sample_image_paths = [
+            path.as_posix() for path in sample_image_paths
+        ]
+        yield sample_image_paths, None, None, f'{step}/{total_steps}'
+
+    trainer.mesh_model.change_default_to_median()
+
+    save_dir = trainer.exp_path / 'mesh'
+    save_dir.mkdir(exist_ok=True, parents=True)
+    trainer.mesh_model.export_mesh(save_dir)
+    model_path = save_dir / 'mesh.obj'
+    mesh = trimesh.load(model_path)
+    mesh_path = save_dir / 'mesh.glb'
+    mesh.export(mesh_path, file_type='glb')
+
+    zip_path = self.zip_results(config.log.exp_dir)
+
     return jsonify(sample_image_paths=sample_image_paths, mesh_path=mesh_path.as_posix(), zip_path=zip_path, status='Done!')
 
 if __name__ == "__main__":
