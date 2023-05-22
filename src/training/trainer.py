@@ -460,7 +460,7 @@ class TEXTure:
             loss = ((masked_pred - masked_target.detach()).pow(2) * masked_mask).mean() + (
                     (masked_pred - masked_pred.detach()).pow(2) * (1 - masked_mask)).mean()
 
-            meta_outputs = self.mesh_model.render(background=torch.Tensor([0, 0, 0]).to(self.device),
+            meta_outputs = self.mesh_model.module.render(background=torch.Tensor([0, 0, 0]).to(self.device),
                                                   use_meta_texture=True, render_cache=render_cache)
             current_z_normals = meta_outputs['image']
             current_z_mask = meta_outputs['mask'].flatten()
