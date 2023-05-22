@@ -79,7 +79,7 @@ def run():
 
     save_dir = trainer.exp_path / 'mesh'
     save_dir.mkdir(exist_ok=True, parents=True)
-    trainer.mesh_model.export_mesh(save_dir)
+    trainer.mesh_model.module.export_mesh(save_dir)
     model_path = save_dir / 'mesh.obj'
     mesh = trimesh.load(model_path)
     mesh_path = save_dir / 'mesh.glb'
