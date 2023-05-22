@@ -314,11 +314,11 @@ class TEXTure:
         rgb_render = rgb_render * (1 - uncolored_mask) + utils.color_with_shade([0.85, 0.85, 0.85], z_normals=z_normals,
                                                                                 light_coef=0.3) * uncolored_mask
 
-        outputs_with_median = self.mesh_model.render(theta=theta, phi=phi, radius=radius,
+        outputs_with_median = self.mesh_model.module.render(theta=theta, phi=phi, radius=radius,
                                                      dims=(dim, dim), use_median=True,
                                                      render_cache=outputs['render_cache'])
 
-        meta_output = self.mesh_model.render(theta=theta, phi=phi, radius=radius,
+        meta_output = self.mesh_model.module.render(theta=theta, phi=phi, radius=radius,
                                              background=torch.Tensor([0, 0, 0]).to(self.device),
                                              use_meta_texture=True, render_cache=outputs['render_cache'])
         pred_z_normals = meta_output['image'][:, :1].detach()
