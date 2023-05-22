@@ -73,9 +73,9 @@ def run():
         sample_image_dir = config.log.exp_dir / 'vis' / 'eval'
         sample_image_paths = sorted(
             sample_image_dir.glob(f'step_{trainer.paint_step:05d}_*.jpg'))
-        sample_image_paths = [
+        sample_image_paths.extend(
             path.as_posix() for path in sample_image_paths
-        ]
+        )
         yield None
 
     trainer.mesh_model.change_default_to_median()
