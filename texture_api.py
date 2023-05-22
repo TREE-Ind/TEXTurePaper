@@ -63,6 +63,7 @@ def run():
     trainer.mesh_model.train()
 
     total_steps = len(trainer.dataloaders['train'])
+    sample_image_paths = []
     for step, data in enumerate(trainer.dataloaders['train'], start=1):
         trainer.paint_step += 1
         trainer.paint_viewpoint(data)
