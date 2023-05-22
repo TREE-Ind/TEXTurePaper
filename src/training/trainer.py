@@ -332,7 +332,7 @@ class TEXTure:
                          depth_render: torch.Tensor,
                          z_normals: torch.Tensor, z_normals_cache: torch.Tensor, edited_mask: torch.Tensor,
                          mask: torch.Tensor):
-        diff = (rgb_render_raw.detach() - torch.tensor(self.mesh_model.default_color).view(1, 3, 1, 1).to(
+        diff = (rgb_render_raw.detach() - torch.tensor(self.mesh_model.module.default_color).view(1, 3, 1, 1).to(
             self.device)).abs().sum(axis=1)
         exact_generate_mask = (diff < 0.1).float().unsqueeze(0)
 
