@@ -45,19 +45,28 @@ def zip_results(exp_dir: pathlib.Path) -> str:
 
 @app.route('/generate', methods=['POST'])
 def run():
-    data = request.json
-    shape_path = data['shape_path']
-    text = data['text']
-    seed = int(data['seed'])
-    guidance_scale = float(data['guidance_scale'])
+    # Check if the post request has the file part
+    if 'file' not in request.files:
+        return jsonify(error='No file part'), 400
+    file = request.files['file']
+    # If user does not select file, browser also submits an empty part without filename
+    if file.filename == '':
+        return jsonify(error='No selected file'), 400
 
-    if not shape_path.endswith('.obj'):
+    # Other data from the request
+    text = request.form.get('text')
+    seed = int(request.form.get('seed'))
+    guidance_scale = float(request.form.get('guidance_scale'))
+
+    if file and file.filename.endswith('.obj'):
+        shape_path = os.path.join(tempfile.gettempdir(), secure_filename(file.filename))
+        file.save(shape_path)
+    else:
         return jsonify(error='The input file is not .obj file.'), 400
-    if not check_num_faces(shape_path):
-        return jsonify(error='The number of faces is over 100,000.'), 400
 
-    config = load_config(shape_path, text, seed, guidance_scale)
-    trainer = TEXTure(config)
+    if not check_num_faces(shape_path):
+        os.remove(shape_path)
+        return jsonify(error='The number of faces is over 100,000.'), 400
 
 
     trainer.mesh_model.train()
