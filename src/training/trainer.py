@@ -304,7 +304,7 @@ class TEXTure:
         phi = phi - np.deg2rad(self.cfg.render.front_offset)
         phi = float(phi + 2 * np.pi if phi < 0 else phi)
         dim = self.cfg.render.eval_grid_size
-        outputs = self.mesh_model.render(theta=theta, phi=phi, radius=radius,
+        outputs = self.mesh_model.module.render(theta=theta, phi=phi, radius=radius,
                                          dims=(dim, dim), background='white')
         z_normals = outputs['normals'][:, -1:, :, :].clamp(0, 1)
         rgb_render = outputs['image']  # .permute(0, 2, 3, 1).contiguous().clamp(0, 1)
