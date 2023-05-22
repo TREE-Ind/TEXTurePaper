@@ -216,7 +216,7 @@ class TEXTure:
                                          render_cache=render_cache, use_median=self.paint_step > 1)
         rgb_render = outputs['image']
         # Render meta texture map
-        meta_output = self.mesh_model.render(background=torch.Tensor([0, 0, 0]).to(self.device),
+        meta_output = self.mesh_model.module.render(background=torch.Tensor([0, 0, 0]).to(self.device),
                                              use_meta_texture=True, render_cache=render_cache)
 
         z_normals = outputs['normals'][:, -1:, :, :].clamp(0, 1)
