@@ -77,7 +77,6 @@ def run():
         sample_image_paths.extend(
             path.as_posix() for path in sample_image_paths
         )
-        yield None
 
     trainer.mesh_model.change_default_to_median()
 
