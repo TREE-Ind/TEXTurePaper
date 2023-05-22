@@ -90,8 +90,9 @@ def run():
 
     zip_path = self.zip_results(config.log.exp_dir)
 
+    mesh_file = str(mesh_path)
     # Return the generated point cloud as a response
-    return send_file(mesh_path)
+    return send_file(mesh_file)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
