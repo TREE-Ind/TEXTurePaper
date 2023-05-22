@@ -449,7 +449,7 @@ class TEXTure:
                                      eps=1e-15)
         for _ in tqdm(range(200), desc='fitting mesh colors'):
             optimizer.zero_grad()
-            outputs = self.mesh_model.render(background=background,
+            outputs = self.mesh_model.module.render(background=background,
                                              render_cache=render_cache)
             rgb_render = outputs['image']
 
