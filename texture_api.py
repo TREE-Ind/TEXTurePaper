@@ -88,11 +88,14 @@ def run():
     mesh_path = save_dir / 'mesh.glb'
     mesh.export(mesh_path, file_type='glb')
 
-    #zip_path = self.zip_results(config.log.exp_dir)
+    zip_path = self.zip_results(config.log.exp_dir)
 
-    mesh_file = str(mesh_path)
-    # Return the generated point cloud as a response
-    return send_file(mesh_file, as_attachment=True, attachment_filename='result.glb')
+    return str(mesh_path)
+
+@app.route('/download', methods=['GET'])
+def download():
+    mesh_path = run()
+    return send_file(mesh_path, as_attachment=True, attachment_filename='result.glb')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
