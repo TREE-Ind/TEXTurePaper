@@ -61,7 +61,7 @@ class TEXTure:
                                   texture_resolution=self.cfg.guide.texture_resolution,
                                   augmentations=False)
 
-        model= nn.DataParallel(model)
+        model = nn.DataParallel(model)
         model = model.to(self.device)
         logger.info(
             f'Loaded Mesh, #parameters: {sum([p.numel() for p in model.parameters() if p.requires_grad])}')
