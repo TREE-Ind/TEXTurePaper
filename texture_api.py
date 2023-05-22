@@ -83,12 +83,12 @@ def run():
     model_path = save_dir / 'mesh.obj'
     mesh = trimesh.load(model_path)
     mesh_path = save_dir / 'mesh.glb'
-    mesh_file = mesh.export(mesh_path, file_type='glb')
+    mesh.export(mesh_path, file_type='glb')
 
     #zip_path = zip_results(config.log.exp_dir)
     
     # Return the generated point cloud as a response
-    return send_file(mesh_file)
+    return send_file(mesh_path)
 
 @app.route('/download', methods=['GET'])
 def download():
