@@ -308,7 +308,7 @@ class TEXTure:
                                          dims=(dim, dim), background='white')
         z_normals = outputs['normals'][:, -1:, :, :].clamp(0, 1)
         rgb_render = outputs['image']  # .permute(0, 2, 3, 1).contiguous().clamp(0, 1)
-        diff = (rgb_render.detach() - torch.tensor(self.mesh_model.default_color).view(1, 3, 1, 1).to(
+        diff = (rgb_render.detach() - torch.tensor(self.mesh_model.module.default_color).view(1, 3, 1, 1).to(
             self.device)).abs().sum(axis=1)
         uncolored_mask = (diff < 0.1).float().unsqueeze(0)
         rgb_render = rgb_render * (1 - uncolored_mask) + utils.color_with_shade([0.85, 0.85, 0.85], z_normals=z_normals,
