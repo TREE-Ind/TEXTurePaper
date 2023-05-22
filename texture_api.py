@@ -89,8 +89,12 @@ def run():
     mesh.export(mesh_path, file_type='glb')
 
     zip_path = self.zip_results(config.log.exp_dir)
-
-    return str(mesh_path)
+    
+    return jsonify({
+        'sample_image_paths': sample_image_paths,
+        'mesh_path': str(mesh_path),
+        'zip_path': zip_path
+    })
 
 @app.route('/download', methods=['GET'])
 def download():
