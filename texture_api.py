@@ -48,8 +48,8 @@ def run():
     data = request.json
     shape_path = data['shape_path']
     text = data['text']
-    seed = data['seed']
-    guidance_scale = data['guidance_scale']
+    seed = int(data['seed'])
+    guidance_scale = float(data['guidance_scale'])
 
     if not shape_path.endswith('.obj'):
         return jsonify(error='The input file is not .obj file.'), 400
