@@ -92,7 +92,7 @@ def run():
 
     mesh_file = str(mesh_path)
     # Return the generated point cloud as a response
-    return send_file(mesh_file)
+    return send_file(mesh_file, as_attachment=True, attachment_filename='result.glb')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
