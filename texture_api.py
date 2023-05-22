@@ -8,7 +8,7 @@ from typing import Optional
 
 import trimesh
 
-sys.path.append('TEXTurePaper')
+#sys.path.append('TEXTurePaper')
 
 from src.configs.train_config import GuideConfig, LogConfig, TrainConfig
 from src.training.trainer import TEXTure
