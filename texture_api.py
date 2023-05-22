@@ -85,7 +85,7 @@ def run():
     mesh_path = save_dir / 'mesh.glb'
     mesh.export(mesh_path, file_type='glb')
 
-    zip_path = self.zip_results(config.log.exp_dir)
+    zip_path = zip_results(config.log.exp_dir)
     
     return jsonify({
         'sample_image_paths': sample_image_paths,
