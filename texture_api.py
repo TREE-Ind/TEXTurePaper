@@ -90,7 +90,8 @@ def run():
 
     zip_path = self.zip_results(config.log.exp_dir)
 
-    return jsonify(sample_image_paths=sample_image_paths, mesh_path=mesh_path.as_posix(), zip_path=zip_path, status='Done!')
+    # Return the generated point cloud as a response
+    return send_file(mesh_path)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
