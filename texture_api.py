@@ -65,4 +65,4 @@ def run():
     return jsonify(sample_image_paths=sample_image_paths, mesh_path=mesh_path.as_posix(), zip_path=zip_path, status='Done!')
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
