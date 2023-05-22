@@ -207,12 +207,12 @@ class TEXTure:
                                        mode='bilinear', align_corners=False)
 
         # Render from viewpoint
-        outputs = self.mesh_model.render(theta=theta, phi=phi, radius=radius, background=background)
+        outputs = self.mesh_model.module.render(theta=theta, phi=phi, radius=radius, background=background)
         render_cache = outputs['render_cache']
         rgb_render_raw = outputs['image']  # Render where missing values have special color
         depth_render = outputs['depth']
         # Render again with the median value to use as rgb, we shouldn't have color leakage, but just in case
-        outputs = self.mesh_model.render(background=background,
+        outputs = self.mesh_model.module.render(background=background,
                                          render_cache=render_cache, use_median=self.paint_step > 1)
         rgb_render = outputs['image']
         # Render meta texture map
