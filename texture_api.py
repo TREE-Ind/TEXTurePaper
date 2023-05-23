@@ -72,7 +72,7 @@ def run():
     if not check_num_faces(local_shape_path):
         return jsonify(error='The number of faces is over 100,000.'), 400
 
-    config = load_config(local_file_path, text, seed, guidance_scale)
+    config = load_config(local_shape_path, text, seed, guidance_scale)
     
     trainer = TEXTure(config)
 
