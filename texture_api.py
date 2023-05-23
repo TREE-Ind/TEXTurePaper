@@ -46,39 +46,38 @@ def zip_results(exp_dir: pathlib.Path) -> str:
     subprocess.run(shlex.split(f'zip -r {out_path} {mesh_dir}'))
     return out_path
 
-def download_s3_obj(s3_url: str, local_path: str):
-    s3 = boto3.resource('s3')
+@app.route('/generate', methods=['POST'])
+def run():
+    data = request.json
+    shape_path = data['shape_path']  # Now this will be S3 URL
+    text = data['text']
+    seed = int(data['seed'])
+    guidance_scale = float(data['guidance_scale'])
 
-    # extract bucket name and key from the url
-    if s3_url.startswith('s3://'):
-        s3_url = s3_url[5:]
-    bucket_name, key = s3_url.split('/', 1)
+    if not shape_path.endswith('.obj'):
+        return jsonify(error='The input file is not .obj file.'), 400
 
+    # Parse S3 URL
+    path_parts = shape_path.replace("https://", "").split("/")
+    bucket_name = path_parts[1]
+    file_path_in_bucket = "/".join(path_parts[2:])
+
+    # Download the file
+    s3 = boto3.client('s3')
+    local_file_path = "/tmp/" + path_parts[-1]
     try:
-        s3.Bucket(bucket_name).download_file(key, local_path)
+        s3.download_file(bucket_name, file_path_in_bucket, local_file_path)
     except NoCredentialsError:
         return jsonify(error='No AWS credentials found.'), 400
     except Exception as e:
         return jsonify(error=str(e)), 400
 
-@app.route('/generate', methods=['POST'])
-def run():
-    data = request.json
-    s3_shape_path = data['shape_path']
-    local_shape_path = 'local.obj'  # specify your local path here
-    text = data['text']
-    seed = int(data['seed'])
-    guidance_scale = float(data['guidance_scale'])
-
-    # Download the .obj file from the S3 bucket to the local path
-    download_s3_obj(s3_shape_path, local_shape_path)
-
-    if not local_shape_path.endswith('.obj'):
-        return jsonify(error='The input file is not .obj file.'), 400
-    if not check_num_faces(local_shape_path):
+    if not check_num_faces(local_file_path):
+        os.remove(local_file_path)
         return jsonify(error='The number of faces is over 100,000.'), 400
 
-    config = load_config(local_shape_path, text, seed, guidance_scale)
+    config = load_config(local_file_path, text, seed, guidance_scale)
+    
     trainer = TEXTure(config)
 
 
