@@ -64,7 +64,7 @@ def run():
 
     # Download the file
     s3 = boto3.client('s3')
-    local_file_path = "/tmp/" + path_parts[-1]
+    local_file_path = "/" + path_parts[-1]
     try:
         s3.download_file(bucket_name, file_path_in_bucket, local_file_path)
     except NoCredentialsError:
