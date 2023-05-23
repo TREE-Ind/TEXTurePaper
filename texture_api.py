@@ -18,7 +18,7 @@ from src.configs.train_config import GuideConfig, LogConfig, TrainConfig
 from src.training.trainer import TEXTure
 
 app = Flask(__name__)
-max_num_faces = 100000
+max_num_faces = 150000
 
 def load_config(shape_path: str, text: str, seed: int, guidance_scale: float) -> TrainConfig:
     text += ', {} view'
