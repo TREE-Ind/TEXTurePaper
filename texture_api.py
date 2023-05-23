@@ -6,7 +6,7 @@ import subprocess
 import sys
 from typing import Optional
 import sys
-import urllib.parse
+from urllib.parse import urlparse
 
 import trimesh
 import boto3
