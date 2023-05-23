@@ -46,29 +46,19 @@ def zip_results(exp_dir: pathlib.Path) -> str:
     subprocess.run(shlex.split(f'zip -r {out_path} {mesh_dir}'))
     return out_path
 
-def download_obj_from_s3(shape_path):
-    # Parse S3 URL
+def download_from_s3(shape_path: str, local_path: str) -> bool:
     path_parts = shape_path.replace("https://", "").split("/")
-    if len(path_parts) < 4:
-        return jsonify(error='The S3 URL is not valid.'), 400
-
     bucket_name = path_parts[2]
     file_path_in_bucket = "/".join(path_parts[3:])
 
-    # Ensure file path is not empty
-    if not file_path_in_bucket:
-        return jsonify(error='The S3 file path is not valid.'), 400
-
-    local_obj_path = "temp.obj"
+    s3 = boto3.client('s3')
 
     try:
-        s3.download_file(bucket_name, file_path_in_bucket, local_obj_path)
+        s3.download_file(bucket_name, file_path_in_bucket, local_path)
+        return True
     except NoCredentialsError:
-        return jsonify(error='No AWS credentials found.'), 400
-    except Exception as e:
-        return jsonify(error=str(e)), 400
-    
-    return local_obj_path
+        print("No AWS credentials were found.")
+        return False
 
 @app.route('/generate', methods=['POST'])
 def run():
@@ -78,12 +68,13 @@ def run():
     seed = int(data['seed'])
     guidance_scale = float(data['guidance_scale'])
 
-    # Download .obj file from S3 bucket
-    shape_path = download_obj_from_s3(shape_path)
+    local_path = '/tmp/mesh.obj'
+    if not download_from_s3(shape_path, local_path):
+        return jsonify(error='Failed to download the mesh file from S3.'), 400
 
-    if not shape_path.endswith('.obj'):
+    if not local_path.endswith('.obj'):
         return jsonify(error='The input file is not .obj file.'), 400
-    if not check_num_faces(shape_path):
+    if not check_num_faces(local_path):
         return jsonify(error='The number of faces is over 100,000.'), 400
 
     config = load_config(local_file_path, text, seed, guidance_scale)
