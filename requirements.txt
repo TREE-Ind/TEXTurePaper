@@ -13,3 +13,5 @@ loguru
 tqdm
 einops
 opencv-python
+boto3
+flask
